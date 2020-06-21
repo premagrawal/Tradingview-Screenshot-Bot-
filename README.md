@@ -1,2 +1,3 @@
 # Tradingview-Screenshot-Bot-
-This Code takes screenshot of all the FNO stock's Chart from Tradingview 
+This code asks for your login id , password and timeframe then runs list of all FNO Stocks and exports the URL of each company's chart in a csv file 
+
