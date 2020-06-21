@@ -68,5 +68,14 @@ def heatmap_list():
     df = requests.get(my_nse_url,headers=header).json()['data']
     stock_list = []
     for f in df:
-        stock_list.append(f['symbol'])
+        #stock_list.append(f['symbol'])
+        if '&' in f['symbol']:
+            f['symbol'] = 'NSE:' + f['symbol'].replace('&','_')
+            stock_list.append(f['symbol'])
+        elif '-' in f['symbol']:
+            f['symbol'] = 'NSE:' + f['symbol'].replace('-','_')
+            stock_list.append(f['symbol'])
+        else :
+            f['symbol'] = 'NSE:' + f['symbol']
+            stock_list.append(f['symbol'])
     return stock_list
