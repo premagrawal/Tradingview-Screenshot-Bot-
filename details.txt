@@ -2,8 +2,7 @@ What does this code do :
  Will ask you for Tview ID , Password , Timeframe
  Then run all FNO symbols one by one and generate a URL of each chart and export it to a csv file
 Bugs :
-  As their are too much time.sleep in the code it consumes too much time before giving a csv output
-  Sometimes types next symbol's name without clearing the previous symbol's name
+  No bugs as of now
 What we can add :
   Multi Timeframe Link Generation
   Max Pain Deviation Column in CSV

@@ -1,9 +1,11 @@
 from Codes import *
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
 import time
-import csv
-from collections import defaultdict
+import pandas
 try :
     id = input('Enter your Login ID - ')
     password = input('Enter your Password - ')
@@ -20,54 +22,41 @@ try :
     time.sleep(5)
 except :
     driver.quit()
-def take_screenshot(driver):
-    e = driver.find_element_by_id("header-toolbar-screenshot")
-    e.click()
-    time.sleep(2)
-    e = driver.find_element_by_class_name("textInput-3WRWEmm7")
-    link = e.get_attribute("value")
-    time.sleep(1)
-    e = driver.find_element_by_class_name("close-3kPn4OTV")
-    e.click()
-    time.sleep(2)
-    return link
+#This code changes Timeframe
 def change_tf(driver,tf):
     tf_list = ['5m','15m','30m','1H','1D']
-    # 5m //*[@id="header-toolbar-intervals"]/div[1]
-    # 15m //*[@id="header-toolbar-intervals"]/div[2]
-    # 30m //*[@id="header-toolbar-intervals"]/div[3]
-    # 1H //*[@id="header-toolbar-intervals"]/div[4]
-    # 1D //*[@id="header-toolbar-intervals"]/div[5]
     index = str('[' + str(int(tf_list.index(tf)) + 1 ) + ']')
     driver.find_element_by_xpath('//*[@id="header-toolbar-intervals"]/div'+ index).click()
+#This function gets called in link_generator if symbol name is changed and generates a URL
+def take_screenshot(driver):
+    time.sleep(5)
+    driver.find_element_by_id("header-toolbar-screenshot").click()
+    WebDriverWait(driver,10).until(EC.visibility_of_element_located((By.CLASS_NAME,"textInput-3WRWEmm7")))
+    link = driver.find_element_by_class_name("textInput-3WRWEmm7").get_attribute("value")
+    WebDriverWait(driver,5).until(EC.visibility_of_element_located((By.CLASS_NAME,"close-3kPn4OTV")))
+    driver.find_element_by_class_name("close-3kPn4OTV").click()
+    return link
+
+#This function clears name of the previous symbols and types new symbol name
 def link_generator(driver, stock_name):
     e = driver.find_element_by_class_name('input-3lfOzLDc')
     e.click()
-    time.sleep(1)
-    e.send_keys(Keys.BACKSPACE)
-    time.sleep(1)
+    e.send_keys(Keys.CLEAR)
     e.send_keys(stock_name)
-    time.sleep(1)
     e.send_keys(Keys.RETURN)
-    time.sleep(3)
-    links = (take_screenshot(driver))
-    return links
+    if e.get_attribute('value') == stock_name:
+        links = (take_screenshot(driver))
+        return links
 try :
     value = heatmap_list()
-    res = defaultdict(list)
+    url_list = []
     for v in value:
         change_tf(driver,tf)
         link = link_generator(driver,v)
-        print(v,link)
-        res[v].append(link)
-        time.sleep(2)
-        row_list = ["STOCK SYMBOL","LINK"]
-    for k in res.keys():
-        row = [k]
-        row += res[k]
-        row_list.append(row)
-    with open('output.csv', 'w', newline='') as file:
-        writer = csv.writer(file, delimiter=',')
-        writer.writerows(row_list)
+        print(v,'-',link)
+        url_list.append(link)
+    df = pandas.DataFrame({'Company Name' : value,
+                            'Link'        : url_list})
+    df.to_csv('sample.csv',header=True)
 finally :
     driver.quit()
