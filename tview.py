@@ -14,6 +14,7 @@ try :
     driver = webdriver.Chrome(DRIVER)
     driver.maximize_window()
     driver.get("https://www.tradingview.com/#signin")
+    driver.find_element_by_xpath('//*[@id="overlap-manager-root"]/div/div[2]/div/div/div/div/div/div[1]/div[6]/div/div[1]/div/span').click()
     driver.find_element_by_name("username").send_keys(id)
     driver.find_element_by_name("password").send_keys(password)
     driver.find_element_by_xpath("//button[@type='submit']").click()
