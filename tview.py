@@ -21,8 +21,8 @@ driver.get('https://www.tradingview.com/#signin')
 driver.implicitly_wait(60)
 time.sleep(1)
 driver.find_element(By.XPATH,'//*[@id="overlap-manager-root"]/div/div[2]/div/div/div/div/div/div/div[1]/div[4]/div/span').click()
-username = '11preamagrawal@gmail.com'
-password = 'Mustang@4785'
+username = ''
+password = ''
 driver.implicitly_wait(60)
 time.sleep(2)
 driver.find_element(By.NAME,"username").send_keys(username)
